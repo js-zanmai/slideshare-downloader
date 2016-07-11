@@ -7,10 +7,11 @@ export default class Utility {
     return generator;
   }
   
-  static getParams(secret) {
+  static getParams(apiKey, secret) {
     const unixTimeStamp = Math.round(new Date().getTime() / 1000);
     const currentHash = this.sha1(secret + unixTimeStamp);
     return {
+      api_key: apiKey,
       ts: unixTimeStamp,
       hash: currentHash
     };

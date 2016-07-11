@@ -12,7 +12,7 @@
     "no-use-before-define": 2, 
     "block-spacing": 2,
     "comma-spacing": 2,
-    "camelcase": 2,
+    "camelcase": 1,
     "brace-style": 2,
     "array-bracket-spacing": 2,
     "no-mixed-spaces-and-tabs": 2,
