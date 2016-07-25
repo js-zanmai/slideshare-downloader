@@ -1,1 +1,1 @@
-import Bacon from 'baconjs';
+import $ from 'jquery';

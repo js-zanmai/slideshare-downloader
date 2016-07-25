@@ -1,5 +1,5 @@
 import axios from 'axios';
-import util from './utility';
+import crypto from 'crypto';
 
 const baseUrl = 'https://www.slideshare.net/api/2/';
 
@@ -8,12 +8,27 @@ export default class SlideShare {
   constructor(apiKey, secret) {
     this.apiKey = apiKey;
     this.secret = secret;
-    this.locae = 'ja';
+  }
+
+  sha1(data) {
+    return crypto.createHash('sha1').update(data).digest('hex');
+  }
+  
+  getParams(apiKey, secret) {
+    const unixTimeStamp = Math.round(new Date().getTime() / 1000);
+    const currentHash = this.sha1(secret + unixTimeStamp);
+    return {
+      api_key: apiKey,
+      ts: unixTimeStamp,
+      hash: currentHash
+    };
   }
   
   searchSlideshows(query, opts) {
-    const params = util.getParams(this.apiKey, this.secret);
+    const params = this.getParams(this.apiKey, this.secret);
+
     params.q = query;
+
     if(opts != null) {
       params.detailed = opts.detailed;
       params.page = opts.page;
@@ -28,11 +43,13 @@ export default class SlideShare {
       params.cc = opts.cc;
       params.cc_adapt = opts.cc_adapt;
       params.cc_commercial = opts.cc_commercial;
+      params.lang = opts.lang;
     }
     
-    axios.get(baseUrl + 'search_slideshows', { params: params })
+    return axios.get(baseUrl + 'search_slideshows', { params: params })
       .then(function (response) {
-        console.log(response);
+        // TODO: XMLから適当なJSONに変換してからクライアントに返す。
+        return response.data;
       })
       .catch(function (error) {
         console.log(error);
